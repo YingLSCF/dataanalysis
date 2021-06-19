@@ -3,8 +3,8 @@
 
 ## 1. The Python data is from http://insideairbnb.com/get-the-data.html
 There are two Python files in the repository:
-*a. iPython. You could sse the original codes and the output in one file;
-*b. HTML. This is a knitted HTML file from jupyter notebook.
+*a. iPython. You could sse the original codes and the output in one file;*
+*b. HTML. This is a knitted HTML file from jupyter notebook.*
 
 
 The Transport Planning Method data is from https://www.psrc.org/household-travel-survey-program
