@@ -2,7 +2,7 @@
 
 
 ## 1. The Python data is from http://insideairbnb.com/get-the-data.html
-<\br>
+</br>
 There are two Python files in the repository:
 
 *a. iPython. You could see the original codes and the output in one file;*
