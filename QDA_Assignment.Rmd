@@ -1,0 +1,321 @@
+--- 
+title: '**QDA Assignment**'
+author: "Wanying Sun(2516202)"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: html_document
+---
+<br />
+<br />*Word count: 954 words(excluding questions' words, 155 words)*
+```{r setup, include = FALSE}
+knitr::opts_chunk $ set(echo = TRUE)
+```
+
+```{r data, include = FALSE}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(plyr)
+library(knitr)
+library(tidyr)
+library(patchwork)
+library(scales)
+```
+
+### **1. Write a short summary of what the dataset refers to, and how and why it was collected.**
+
+####### The dataset refers to the Irish people’s attitudes to EU generally and the recent referendum on The Lisbon Treaty in 2009. 
+
+####### The data were collected by the interviewers from MillwardBrown. Overall, each of the interviewers had to interview 10 times per day completely according to the questionnaire in the right time and venues with the appropriate interviewees. The investigation venues and time had been specified in the quota sheet before the conducts started, included the details of the areas and the appropriate interviewees had to be surveyed, such as the gender, age, socio-economic groups belonging, and the places they living in Ireland. The questionnaire contained 26 questions and 4 of them are open ended questions. During and after one round conduct, the interviewer had to check the completion of the questionnaire and probe the open ended questions thoroughly as well as others questions details, and all of those data would be collected into one table and get ready to be analysed as the original data.
+
+####### Due to the veto happened twice to the referendum on the Treaty of Nice in 2001 and that on the Treaty of Lisbon in 2008, the decision to conduct a post-referendum poll was greatly enhanced the ability to analyse Irish attitudes towards European integration and behaviour. The aim of the survey is to collect information on respondent’s attitudes regarding the EU generally and recent Treaty acceptance. This survey would reflect a variety of attitudes, from the identity of the country and Europe to the particular preference for policies and procedures on the European stage.
+<br />
+<br />
+<br />
+
+### **2. How many people voted Yes and No? Present a table which shows numbers and percentages. Present an appropriate plot.**
+
+```{r Question 2, Print out a table}
+Qestion_2 <- read.csv("/Users/sunwanying/Desktop/R file/lisbon-treaty-2-data.csv")
+
+## Print out a table
+number_of_yes <- colSums(Qestion_2 %>% 
+                           select(q1b) %>% 
+                           filter(q1b == 2)) / 2
+number_of_no <- colSums(Qestion_2 %>% 
+                          select(q1b) %>% 
+                          filter(q1b == 3)) / 3
+yes_no <- data.frame("Yes" = c(number_of_yes), 
+                     "No" = c(number_of_no))
+options(digits = 2)
+rownames(yes_no) <- c("Number of Voters")
+rbind(yes_no, "Percentage (%)" = yes_no / (number_of_yes + number_of_no) * 100)
+```
+
+<br />**Q2 table description:**
+<br />
+<br />**The table shows the nummber and percentage of people voted 'Yes' and 'No'. There were over 60% (485 people) showed favour to the Lisbon Treaty and the rest were against to it(271 people, 36%).**
+<br />
+<br />
+```{r Question 2, Print out a plot including numbers and percentage, out.width = "70%", fig.align = "center"}
+## Print out a plot including numbers and percentage
+
+yes <- count(Qestion_2 %>% 
+               select(q1b) %>% 
+               filter(q1b == 2))
+
+no <- count(Qestion_2 %>% 
+              select(q1b) %>% 
+              filter(q1b == 3))
+
+s <- as.double(sum(yes_no))
+summary_Q2 <- rbind(yes, no) %>% 
+  mutate(q1b = ifelse(q1b == 2, 'yes', 
+                      ifelse(3, 'no', NA))) %>%
+  mutate(Percentage = rbind(yes, no) $ freq / s) 
+ggplot(summary_Q2, aes(x = q1b, y = Percentage)) + 
+  ggtitle("Percentage and number of people voted Yes and No") +
+  labs(y = "Percentage", 
+       x = "Vote Results, 2 Oct 2009", 
+       caption = "Fig Q2. Number of people voted Yes and No") +
+  theme(plot.title = element_text(size = 15, hjust = 0.5), 
+        plot.caption = element_text(size = 10, hjust = 0.5), 
+        axis.text.x = element_text(face = "bold", size = 8), 
+        axis.text.y = element_text(face = "bold", size = 8)) +
+  geom_col() + 
+  geom_label(aes(label = freq), vjust = 1.2)
+
+```
+
+<br />**Q2 plot description:**
+<br />
+<br />**The Fig Q2 uses a bar chart that contains the number of people voted Yes and No by adding number labels on the bars. The figures are the same as the table above, 485 voters for Yes and 271 for No as well as the the percentage are about 36% and 64% respectively.**
+<br />
+<br />
+<br />
+
+### **3. What was the average age of Yes and No voters. Plot the distribution of age for both the Yes and No voters on the same plot.**
+
+``` {r Question 3, out.width = "70%", fig.align = "center"}
+Question_3 <- read.csv("/Users/sunwanying/Desktop/R file/lisbon-treaty-2-data.csv", header = T)
+Question3 <- filter(Question_3, q1b <= 3)
+Question3 $ q1b[Question3 $ q1b == 2] <- "Yes"
+Question3 $ q1b[Question3 $ q1b == 3] <- "No"
+ggplot(data = Question3, aes(x = exage, fill = q1b, color = q1b)) + 
+  geom_density(alpha = 0.2) + 
+  labs(title = "Distribution of Age for Yes and No Voters", 
+       x = "Age", 
+       y =  "Density", 
+       caption = "Fig. Q3. The Distribution of Age for Yes and No Voter") +
+  geom_histogram(aes(y= ..density..), 
+                      alpha = 0.5, position = "identity", bins = 60)+
+  theme(plot.title = element_text(size = 15, hjust = 0.5), 
+        plot.caption = element_text(size = 10, hjust = 0.5), 
+        axis.text.x = element_text(face = "bold", size = 8), 
+        axis.text.y = element_text(face = "bold", size = 8))
+```
+
+<br />**Q3 plot description:**
+<br />
+<br />**The Fig. Q3 shows the distribution of age for Yes and No voters as well as the number of voters. The line graph is generally in accordance with normal distribution with sample 756(Q1 table shows), contained by the bars. ** 
+<br />
+```{r table}
+# The average age of Yes and No voters
+rbind("Yes" = summary(Question3[Question3 $ q1b == "Yes", ncol(Question3)]), 
+      "No" = summary(Question3[Question3 $ q1b == "No", ncol(Question3)]))
+```
+
+<br />**Q3 table description:**
+<br />
+<br />**The table implements the average, most/least frequently age, median, minimum, maximum age of people voted Yes and No. As the question mentioned above, the average age of Yes and No voters are 46 and 44 respectively.**
+<br />
+<br />
+<br />
+
+### **4. Plot the percentage of people voting Yes and No for each socio-economic class.**
+
+```{r Question 4, out.width = "70%", fig.align = "center"}
+Question_4 <- read.csv("/Users/sunwanying/Desktop/R file/lisbon-treaty-2-data.csv", header = T)
+Question_4 $ q1b[Question_4 $ q1b == 2] <- "Yes"
+Question_4 $ q1b[Question_4 $ q1b == 3] <- "No"
+
+# Proportion of voting by socio-economic class
+proy <- c()
+pron <- c()
+
+for(i in 2:7 ){
+  proy[i - 1] <- prop.table(table(Question_4 $ q1b[Question_4 $ class == i]))[2]
+  pron[i - 1] <- prop.table(table(Question_4 $ q1b[Question_4 $ class == i]))[1]
+}
+
+scale <- 2:7
+
+Question_4yes <- data.frame(scale, proy)
+colnames(Question_4yes) <- c("scale", "prop")
+Question_4yes $ vote <- "Yes"
+
+Question_4no <- data.frame(scale, pron)
+colnames(Question_4no) <- c("scale", "prop")
+Question_4no $ vote <- "No"
+
+
+Question_4final <- rbind(Question_4yes, Question_4no)
+
+ggplot(Question_4final, aes(x = scale, y = prop, fill = vote)) + 
+  geom_bar(position = "dodge", stat = "identity") + 
+  labs(x = "Each socio-economic class", 
+       y = "Percentage", 
+       caption = "Fig. Q4. The percentage of each soci-economic class varied by number of people voted Yes and No") + 
+  ggtitle("The percentage voted Yes and No for each socio-economic class in 2009") +
+  theme(plot.title = element_text(size = 15, hjust = 0.5), 
+        plot.caption = element_text(size = 10, hjust = 0.5),
+        axis.text.x = element_text(face = "bold", size = 8), 
+        axis.text.y = element_text(face = "bold", size = 8)) +
+  scale_x_continuous(breaks = seq(2, 7, 1), 
+                             labels = c("2" = "AB", "3" = "C1", "4" = "C2", "5" = "DE", "6" = "F50+", "7" = "F50-")) + 
+  scale_y_continuous(breaks = seq(0, 1, 0.1), limits = c(0, 1))
+
+
+```
+
+<br />**Q4 plot description:**
+<br />
+<br />**The Fig.Q4 implements the percentage of 6 different socio-economic classes varied by Yes and No voters in 2009. Overall, the proportion of Yes voters is higher than No voters. Class F50+ contained the most proportions(81% approximately) for yes voters and the lowest(19% approximately) for No voters. Yes proportion in class C2 was the highest, which was about 45% whereas the the lowest for No voters, accouting for about 55% ** 
+<br />
+<br />
+<br />
+
+### **5. How did the proportion voting Yes and No vary by education level?**
+
+```{r Question 5, out.width = "70%", fig.align = "center"}
+Question_5 <- read.csv("/Users/sunwanying/Desktop/R file/lisbon-treaty-2-data.csv", header = T)
+Question_5 $ q1b[Question_5 $ q1b == 2] <- "Yes"
+Question_5 $ q1b[Question_5 $ q1b == 3] <- "No"
+
+# Proportion of voting by education level
+propy <- c()
+propn <- c()
+
+for(i in 2:5 ){
+  propy[i - 1] <- prop.table(table(Question_5 $ q1b[Question_5 $ tea == i]))[2]
+  propn[i - 1] <- prop.table(table(Question_5 $ q1b[Question_5 $ tea == i]))[1]
+}
+
+scale <- 2:5
+
+Question_5yes <- data.frame(scale, propy)
+colnames(Question_5yes) <- c("scale", "prop")
+Question_5yes $ vote <- "Yes"
+
+Question_5no <- data.frame(scale, propn)
+colnames(Question_5no) <- c("scale", "prop")
+Question_5no $ vote <- "No"
+
+
+Question_5final <- rbind(Question_5yes, Question_5no)
+
+ggplot(Question_5final, aes(x = scale, y = prop, fill = vote)) + 
+  geom_bar(position = "dodge", stat = "identity") + 
+  labs(x = "Education Level", 
+       y = "Proportion",  
+       caption = "Fig. Q5. The percentage of each education level varied by number of people voted Yes and No") + 
+  ggtitle("The proportion voting Yes and No vary by education level in 2009") +
+  theme(plot.title = element_text(size = 15, hjust = 0.5), 
+        plot.caption = element_text(size = 10, hjust = 0.5),
+        axis.text.x = element_text(face = "bold", size = 8),
+        axis.text.y = element_text(face = "bold", size = 8)) +
+  scale_x_continuous(breaks = seq(2, 5, 1), 
+                     labels = c("2" = "Primary level", "3" = "Secondary level", "4" = "Third level", "5" = "Still at school/college")) +
+  scale_y_continuous(breaks = seq(0, 1, 0.1), limits = c(0, 1))
+```
+
+<br />**Q5 plot description:**
+<br />
+<br />**The Fig. Q5 illustrates the proportion of Primary level, Secondary level, Thrid level, and Still at school/college education levels varied by Yes and No voters in 2009. Overall, the proportion of Yes voters is higher than No voters. In terms of Thrid level, Yes voters accounted for about 75%, the most largest figure whereas there was only about 25% No voters in the same level. However, other levels were almost the same proportion for both Yes and No voters, accounting for about 60% and 40% respectively.** 
+<br />
+<br />
+<br />
+
+### **6. Using a plot, show how the proportion voting Yes and No varied by how much knowledge a person felt they had about the European Union. What does that pattern show?**
+
+```{r Question 6, out.width = "70%", fig.align = "center"}
+Question_6 <- read.csv("/Users/sunwanying/Desktop/R file/lisbon-treaty-2-data.csv", header = T)
+Question_6 $ q1b[Question_6 $ q1b == 2] <- "Yes"
+Question_6 $ q1b[Question_6 $ q1b == 3] <- "No"
+
+
+# Proportion of voting for specific feeling scale
+propyes <- c()
+propno <- c()
+
+for(i in 2:12 ){
+  propyes[i-1] <- prop.table(table(Question_6 $ q1b[Question_6 $ q8 == i]))[2]
+  propno[i-1] <- prop.table(table(Question_6 $ q1b[Question_6 $ q8 == i]))[1]
+}
+
+scale <- 2:12
+
+Question_6yes <- data.frame(scale, propyes)
+colnames(Question_6yes) <- c("scale", "prop")
+Question_6yes $ vote <- "Yes"
+Question_6no <- data.frame(scale, propno)
+colnames(Question_6no) <- c("scale", "prop")
+Question_6no $ vote <- "No"
+
+
+Question_6final <- rbind(Question_6yes, Question_6no)
+
+ggplot(Question_6final, aes(x = scale,y = prop, fill = vote)) + 
+  geom_bar(position = "dodge", stat = "identity") + 
+  labs(x = "Feeling Scale(2~12: 'Nothing at all'——'Know a great deal'——'Don't know')", 
+       y = "Proportion", 
+       caption = "Fig. Q6. The percentage of different EU knowledge level varied by number of people voted Yes and No") + 
+  ggtitle("Relationship Between Voters' Choice and Feeling about EU in 2009") +
+  theme(plot.title = element_text(hjust = 0.5), 
+        plot.caption = element_text(size = 10, hjust = 0.5),
+        axis.text.x = element_text(face = "bold", size = 8), 
+        axis.text.y = element_text(face = "bold", size = 8)) +
+  scale_x_continuous(breaks = seq(2, 12, 1)) +
+  scale_y_continuous(breaks = seq(0, 1, 0.1), limits = c(0, 1))
+```
+
+<br />**Q6 plot description:**
+<br />
+<br />**The Fig. Q6. bar chart illustrates the proportion of 11 different EU knowledge levels in 2009. Overall, the proportion of Yes voters is higher than No voters. Level 6 took the highest proportion of Yes voters(about 75%) and the lowest No voters(about 25%). Dramatically, the opposite trend was at level 11, that the proportion of Yes voters was below 30%, about 40% lower than No voters, the highest proportion of the given year.** 
+<br />
+<br />**Dramatically, people who had strongest feeling(level 11) about EU voted No in the lisbon Treaty referendum, accounting for about 73%. On the contrary, people who did not show knowledge they had about the European Union nearly got the same Yes and No voters.** 
+<br />
+<br />
+<br />
+
+### **7. Is there a relationship between how much knowledge a person thinks they have about the EU and whether they think Switzerland is a member of the EU? Show this using a plot and describe what, if any, relationship there is.**
+```{r Question 7, out.width = "70%", fig.align = "center"}
+Question_7 <- read.csv("/Users/sunwanying/Desktop/R file/lisbon-treaty-2-data.csv", header = T)
+Question_7 $ q9b[Question_7 $ q9b == 2] <- "True"
+Question_7 $ q9b[Question_7 $ q9b == 3] <- "False"
+Question_7 $ q9b[Question_7 $ q9b == 4] <- "Don't Know"
+Question7 <- data.frame(Question_7 $ q8, Question_7 $ q9b)
+Question7 $ Question_7.q9b <- factor(Question7 $ Question_7.q9b)
+colnames(Question7) <- c("q8", "q9b")
+ggplot(Question7, aes(x = q8, color = q9b, fill = q9b)) +
+  geom_histogram(position = "dodge", bins = 33, binwidth = 0.5, alpha = 0.6) +
+  labs(x = "Feeling Scale of EU", 
+       y = "Knowledge about Switzerland (Count in person)", 
+       caption = "Fig. Q7. Relationship between EU knowledge and Switzerland of EU") +
+  ggtitle("Relationship Between Person's Knowledge about EU and Switzerland in 2009") +
+  theme(plot.title = element_text(hjust = 0.5), 
+        plot.caption = element_text(size = 10, hjust = 0.5),
+        axis.text.x = element_text(face = "bold", size = 8), 
+        axis.text.y = element_text(face = "bold", size = 8)) +
+  scale_x_continuous(breaks = seq(2, 12, 1)) +
+  facet_grid(~q9b) +
+  scale_x_continuous(breaks=seq(2, 12, 1))
+```
+
+<br />**Q7 plot description:**
+<br />
+<br />**The Fig. Q7. illustrates the relationship between three choices(True, False, Don't know) of 'Swizerland is an EU member' and 11 different level from 2-12 about 'The EU knowldge and feeling' in 2009. OVerall, most people chose 'False', and 'True' selection figure had the similar feeling scale as 'False', that both were generally in accordance with normal distribution. Both 'Flase' and 'True' voters seleted level 7 in the given year(approximately 110 people and 49 people respectively) wheras 'don't know' voters tended to chose level 11, accounting for about 57 voters.**
+<br />
+<br />**The relationship between how much knowledge a person thinks they have about the EU and whether they think Switzerland is a member of the EU did not show any pbvious linear relationship from the Fig. Q7, however, there are 2 key features could be noticed from the plot:**
+<br />
+<br />**1. The trend of both 'Fasle' and 'True' voters were generally in accordance with normal distribution;**
+<br />**2. People who showed attitude（True or Flase） tend to be neutralizing attitude to the Swizterland as EU member issue. However, those 'Don't know' voters who did not show the attitude to Swizlerland tended to have lower sense of identiy to EU.**
