@@ -14,11 +14,11 @@ THere are four Transport Planning Method files in the repository:
 *TPM_Assignment1.Rmd;*</br>
 *TPM_assignment2.Rmd*</br>
 *b. one PDF file: TPM_assignment2.pdf*</br>
-*c. Two RMD files: TPM_Assignment1.Rmd and TPM_assignment2.Rmd*</br>
-The confirmed grade for this module is **grade A (Excellent).**
+*c. Two RMD files: TPM_Assignment1.Rmd and TPM_assignment2.Rmd (grade A, Excellent)*</br>
+The confirmed grade for this module is **grade B (Very Good).**
 
 ### 3. The Quantitative Data Analysis data is from https://www.europarl.europa.eu/factsheets/en/sheet/157/personal-data-protection</br>
 There are two files below:</br>
 *a. QDA_Assignment.Rmd*</br>
 *b. QDA_assignment.html*</br>
-The confirmed grade for this module is **grade B (Very good).**
+The confirmed grade for this assessment is **grade B (Very good).**
