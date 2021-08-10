@@ -22,3 +22,8 @@ There are two files below:</br>
 *a. QDA_Assignment.Rmd*</br>
 *b. QDA_assignment.html*</br>
 The confirmed grade for this assessment is **grade B (Very good).**
+
+### 4. Spatial Planning Strategy
+There is one files below:</br>
+*a. 2516202_URBAN5046.pdf*</br>
+The confirmed grade for this assessment is **grade A (Excellent).**
